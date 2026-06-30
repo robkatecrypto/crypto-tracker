@@ -45,23 +45,25 @@
             <!-- Setup Form Panel -->
             <div class="md:col-span-1 bg-gray-900 border border-gray-800 p-5 rounded-xl h-fit">
                 <h3 class="text-sm font-bold text-gray-300 uppercase mb-4 tracking-wider">Set Your Investment</h3>
-                <form id="investment-form" class="space-y-4">
-                    <div>
-                        <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin, solana)</label>
-                        <input type="text" id="inv-coin" required placeholder="bitcoin" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 mb-1">Total Amount Owned (Number of Coins)</label>
-                        <input type="number" id="inv-amount" step="any" required placeholder="1.25" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 mb-1">Initial Cost (Total USD Paid)</label>
-                        <input type="number" id="inv-cost" step="any" required placeholder="180000" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
-                    </div>
-                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-2 rounded text-sm cursor-pointer transition shadow-md">
-                        Save / Overwrite Asset
-                    </button>
-                </form>
+                <form id="investment-form" style="display: flex; flex-direction: column; gap: 15px;">
+    <div>
+        <label style="display: block; font-size: 12px; margin-bottom: 5px; color: #94a3b8;">Coin Name (bitcoin, ethereum, solana)</label>
+        <input type="text" id="inv-coin" required placeholder="bitcoin" style="width: 100%; bg: #1f2937; border: 1px solid #374151; padding: 10px; border-radius: 6px; color: white;">
+    </div>
+    <div>
+        <label style="display: block; font-size: 12px; margin-bottom: 5px; color: #94a3b8;">Total Amount Owned</label>
+        <!-- Swapped type="number" to type="text" to remove the arrow blocks -->
+        <input type="text" id="inv-amount" required placeholder="1.8" style="width: 100%; bg: #1f2937; border: 1px solid #374151; padding: 10px; border-radius: 6px; color: white;">
+    </div>
+    <div>
+        <label style="display: block; font-size: 12px; margin-bottom: 5px; color: #94a3b8;">Initial Cost (Total USD Paid)</label>
+        <!-- Swapped type="number" to type="text" to remove the arrow blocks -->
+        <input type="text" id="inv-cost" required placeholder="180000" style="width: 100%; bg: #1f2937; border: 1px solid #374151; padding: 10px; border-radius: 6px; color: white;">
+    </div>
+    <button type="submit" style="width: 100%; background: #10b981; color: #030712; font-weight: bold; padding: 12px; border-radius: 6px; border: none; cursor: pointer;">
+        Save / Overwrite Asset
+    </button>
+</form>
             </div>
 
             <!-- Live Asset Output Panel -->
