@@ -101,7 +101,7 @@
     </div>
 
     <script>
-        const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_URL = "https://zpdmornrnntxjfgzoxel.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_Uyjnl4PT9p0ZVXH8A-ymPA_COswR2yI";
         
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -121,7 +121,6 @@
                 dashboardScreen.classList.add('hidden');
             }
         });
-
         document.getElementById('btn-signup').addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -162,17 +161,54 @@
                 return;
             }
 
-            const activeAsset = invs;
+            const activeAsset = invs[0]; // Fixes the crash loop instantly
 
             try {
-                const res = await fetch(`https://coingecko.com{activeAsset.coin_id}`);
-                const dataArray = await res.json();
+                let tickerSymbol = "BTCUSDT";
+                if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
+                if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
 
-                if (!dataArray || dataArray.length === 0) {
-                    document.getElementById('asset-name').textContent = "Invalid ID";
-                    return;
-                }
+                const res = await fetch(`https://binance.com{tickerSymbol}`);
+                const marketData = await res.json();
 
-                const marketData = dataArray;
-                const currentPrice = marketData.current_price;
-                const dailyChangePercent = marketData.price_change_percentage_24h || 0;
+                const currentPrice = parseFloat(marketData.lastPrice);
+                const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
+
+                const liveValue = activeAsset.amount * currentPrice;
+                const profitLoss = liveValue - activeAsset.initial_usd_cost;
+                const roiPercentage = activeAsset.initial_usd_cost > 0 ? (profitLoss / activeAsset.initial_usd_cost) * 100 : 0;
+
+                document.getElementById('asset-name').textContent = activeAsset.coin_id;
+                document.getElementById('asset-value').textContent = `$${liveValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                document.getElementById('output-cost').textContent = `$${parseFloat(activeAsset.initial_usd_cost).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                
+                const profitEl = document.getElementById('output-profit');
+                profitEl.textContent = `${profitLoss >= 0 ? '+' : ''}$${profitLoss.toLocaleString(undefined, {minimumFractionDigits: 2})} (${roiPercentage.toFixed(2)}%)`;
+                profitEl.className = `text-lg font-bold ${profitLoss >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+                const dailyBadge = document.getElementById('daily-badge');
+                dailyBadge.textContent = `${dailyChangePercent >= 0 ? '+' : ''}${dailyChangePercent.toFixed(2)}% Today`;
+                dailyBadge.className = `inline-block text-xs font-bold px-2 py-1 rounded ${dailyChangePercent >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}`;
+
+            } catch (err) {
+                console.error("Market API error: ", err);
+            }
+        }
+
+        function resetDashboardUI() {
+            document.getElementById('asset-name').textContent = "No Asset Monitored";
+            document.getElementById('asset-value').textContent = '$0.00';
+            document.getElementById('output-cost').textContent = '$0.00';
+            document.getElementById('output-profit').textContent = '$0.00 (0%)';
+            document.getElementById('output-profit').className = 'text-lg font-bold text-white';
+            document.getElementById('daily-badge').className = 'inline-block text-xs font-bold px-2 py-1 rounded bg-gray-800 text-gray-400';
+            document.getElementById('daily-badge').textContent = '0.00% Today';
+        }
+
+        setInterval(loadInvestmentData, 60000);
+    </script>
+</body>
+</html>
+
+        
+               
