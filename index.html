@@ -138,13 +138,12 @@
 
         document.getElementById('btn-logout').addEventListener('click', () => supabase.auth.signOut());
 
-        document.getElementById('investment-form').addEventListener('submit', async (e) => {
+       document.getElementById('investment-form').addEventListener('submit', async (e) => {
     e.preventDefault(); 
     const coin_id = document.getElementById('inv-coin').value.trim().toLowerCase();
     const amount = parseFloat(document.getElementById('inv-amount').value);
     const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
 
-    // Bypassing RLS by using standard public upsert calls
     const { error } = await supabase.from('user_investments').upsert({
         profile_id: "shared_dashboard", 
         coin_id: coin_id, 
@@ -160,7 +159,6 @@
         loadInvestmentData();
     }
 });
-
         async function loadInvestmentData() {
             const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
             if (error) return console.error(error);
