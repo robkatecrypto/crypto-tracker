@@ -139,18 +139,27 @@
         document.getElementById('btn-logout').addEventListener('click', () => supabase.auth.signOut());
 
         document.getElementById('investment-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const coin_id = document.getElementById('inv-coin').value.trim().toLowerCase();
-            const amount = parseFloat(document.getElementById('inv-amount').value);
-            const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
+    e.preventDefault(); 
+    const coin_id = document.getElementById('inv-coin').value.trim().toLowerCase();
+    const amount = parseFloat(document.getElementById('inv-amount').value);
+    const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
 
-            const { error } = await supabase.from('user_investments').upsert({
-                profile_id: "shared_dashboard", coin_id, amount, initial_usd_cost, updated_at: new Date()
-            });
+    // Bypassing RLS by using standard public upsert calls
+    const { error } = await supabase.from('user_investments').upsert({
+        profile_id: "shared_dashboard", 
+        coin_id: coin_id, 
+        amount: amount, 
+        initial_usd_cost: initial_usd_cost, 
+        updated_at: new Date()
+    });
 
-            if (error) alert(error.message);
-            else loadInvestmentData();
-        });
+    if (error) {
+        alert("Database Error: " + error.message);
+    } else {
+        alert("Investment Saved Successfully!");
+        loadInvestmentData();
+    }
+});
 
         async function loadInvestmentData() {
             const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
