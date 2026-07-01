@@ -9,11 +9,10 @@
 </head>
 <body class="bg-gray-950 text-slate-100 min-h-screen">
 
-    <!-- LOGIN SCREEN -->
     <div id="auth-screen" class="flex min-h-screen items-center justify-center p-4">
         <div class="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl">
             <h2 class="text-2xl font-bold text-center text-emerald-400 mb-2">Crypto Asset Monitor</h2>
-            <p class="text-xs text-gray-400 text-center mb-6">Create up to 2 unique logins. Accounts share the same data view.</p>
+            <p class="text-xs text-gray-400 text-center mb-6">Shared dashboard account access portal.</p>
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs text-gray-400 mb-1">Email Address</label>
@@ -31,7 +30,6 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
     <div id="dashboard-screen" class="hidden max-w-4xl mx-auto p-6">
         <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-800">
             <div>
@@ -42,20 +40,19 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- Setup Form Panel -->
             <div class="md:col-span-1 bg-gray-900 border border-gray-800 p-5 rounded-xl h-fit">
                 <h3 class="text-sm font-bold text-gray-300 uppercase mb-4 tracking-wider">Set Your Investment</h3>
                 <form id="investment-form" class="space-y-4">
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin, solana)</label>
+                        <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin)</label>
                         <input type="text" id="inv-coin" required placeholder="bitcoin" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Total Amount Owned (Number of Coins)</label>
+                        <label class="block text-xs text-gray-400 mb-1">Total Amount Owned</label>
                         <input type="text" id="inv-amount" required placeholder="1.8" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Initial Cost (Total USD Paid)</label>
+                        <label class="block text-xs text-gray-400 mb-1">Initial USD Cost</label>
                         <input type="text" id="inv-cost" required placeholder="180000" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-2 rounded text-sm cursor-pointer transition shadow-md">
@@ -63,8 +60,6 @@
                     </button>
                 </form>
             </div>
-
-            <!-- Live Asset Output Panel -->
             <div class="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col justify-between">
                 <div class="flex justify-between items-start">
                     <div>
@@ -73,52 +68,37 @@
                         <p class="text-xs text-gray-400 mt-1">Current Live Valuation</p>
                     </div>
                     <div class="text-right">
-                        <span id="daily-badge" class="inline-block text-xs font-bold px-2 py-1 rounded bg-gray-800 text-gray-400">0.00% Daily</span>
-                        <p class="text-[10px] text-gray-500 mt-1">24h Market Change</p>
+                        <span id="daily-badge" class="inline-block text-xs font-bold px-2 py-1 rounded bg-gray-800 text-gray-400">0.00% Today</span>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-800/60">
                     <div>
-                        <p class="text-gray-400 text-xs">Your Initial Starting Principal</p>
+                        <p class="text-gray-400 text-xs">Starting Principal</p>
                         <p id="output-cost" class="text-lg font-bold text-white">$0.00</p>
                     </div>
                     <div>
-                        <p class="text-gray-400 text-xs">Total Return on Investment</p>
+                        <p class="text-gray-400 text-xs">Total return ROI</p>
                         <p id="output-profit" class="text-lg font-bold text-white">$0.00 (0%)</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Contact Me Section -->
-        <footer class="mt-12 text-center text-sm border-t border-gray-800 pt-6">
-            <p class="text-gray-400">Have questions or found an issue?</p>
-            <a id="contact-link" href="mailto:heb.murr@example.com" class="inline-block mt-2 text-emerald-400 hover:text-emerald-300 font-semibold underline transition">
-                Contact Me Via Email
-            </a>
-        </footer>
     </div>
 
     <script>
         const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_Uyjnl4PT9p0ZVXH8A-ymPA_COswR2yI";
-        
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const authScreen = document.getElementById('auth-screen');
-        const dashboardScreen = document.getElementById('dashboard-screen');
-        const userDisplay = document.getElementById('user-display');
 
         supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
-                authScreen.classList.add('hidden');
-                dashboardScreen.classList.remove('hidden');
-                userDisplay.textContent = `User: ${session.user.email}`;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                document.getElementById('user-display').textContent = `User: ${session.user.email}`;
                 loadInvestmentData();
             } else {
-                authScreen.classList.remove('hidden');
-                dashboardScreen.classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('dashboard-screen').classList.add('hidden');
             }
         });
 
@@ -127,7 +107,7 @@
             const password = document.getElementById('password').value;
             const { error } = await supabase.auth.signUp({ email, password });
             if (error) alert(error.message);
-            else alert("Account created successfully! You can log into your dashboard now.");
+            else alert("Account created successfully!");
         });
 
         document.getElementById('btn-login').addEventListener('click', async () => {
@@ -145,76 +125,47 @@
             const amount = parseFloat(document.getElementById('inv-amount').value);
             const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
 
-            if (isNaN(amount) || isNaN(initial_usd_cost)) {
-                return alert("Please enter valid numeric values.");
-            }
-
             const { error } = await supabase.from('user_investments').upsert({
-                profile_id: "shared_dashboard", coin_id: coin_id, amount: amount, initial_usd_cost: initial_usd_cost, updated_at: new Date()
+                profile_id: "shared_dashboard", coin_id, amount, initial_usd_cost, updated_at: new Date()
             });
 
-            if (error) {
-                alert("Database Error: " + error.message);
-            } else {
-                alert("Investment Saved Successfully!");
-                loadInvestmentData();
-            }
+            if (error) alert("Database Error: " + error.message);
+            else { alert("Investment Saved Successfully!"); loadInvestmentData(); }
         });
 
         async function loadInvestmentData() {
-            const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
-            if (error) return console.error(error);
+            try {
+                const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
+                if (error || !invs || invs.length === 0) return;
+                const activeAsset = invs[0];
 
-            if (!invs || invs.length === 0) {
-                resetDashboardUI();
-                return;
-            }
+                let tickerSymbol = "BTCUSDT";
+                if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
+                if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
 
-           const activeAsset = invs[0];
+                const res = await fetch(`https://binance.com{tickerSymbol}`);
+                const marketData = await res.json();
+                const currentPrice = parseFloat(marketData.lastPrice);
+                const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
 
-        try {
-            let tickerSymbol = "BTCUSDT";
-            if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
-            if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
+                const liveValue = activeAsset.amount * currentPrice;
+                const profitLoss = liveValue - activeAsset.initial_usd_cost;
+                const roiPercentage = activeAsset.initial_usd_cost > 0 ? (profitLoss / activeAsset.initial_usd_cost) * 100 : 0;
 
-            // Fully fixed Binance connection URL
-            const res = await fetch(`https://binance.com{tickerSymbol}`);
-            const marketData = await res.json();
+                document.getElementById('asset-name').textContent = activeAsset.coin_id;
+                document.getElementById('asset-value').textContent = `$${liveValue.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                document.getElementById('output-cost').textContent = `$${parseFloat(activeAsset.initial_usd_cost).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                
+                const profitEl = document.getElementById('output-profit');
+                profitEl.textContent = `${profitLoss >= 0 ? '+' : ''}$${profitLoss.toLocaleString(undefined, {minimumFractionDigits: 2})} (${roiPercentage.toFixed(2)}%)`;
+                profitEl.className = `text-lg font-bold ${profitLoss >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-            const currentPrice = parseFloat(marketData.lastPrice);
-            const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
-
-            const liveValue = activeAsset.amount * currentPrice;
-            const profitLoss = liveValue - activeAsset.initial_usd_cost;
-            const roiPercentage = activeAsset.initial_usd_cost > 0 ? (profitLoss / activeAsset.initial_usd_cost) * 100 : 0;
-
-            document.getElementById('asset-name').textContent = activeAsset.coin_id;
-            document.getElementById('asset-value').textContent = `$${liveValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('output-cost').textContent = `$${parseFloat(activeAsset.initial_usd_cost).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-            
-            const profitEl = document.getElementById('output-profit');
-            profitEl.textContent = `${profitLoss >= 0 ? '+' : ''}$${profitLoss.toLocaleString(undefined, {minimumFractionDigits: 2})} (${roiPercentage.toFixed(2)}%)`;
-            profitEl.style.color = profitLoss >= 0 ? '#10b981' : '#ef4444';
-
-            const dailyBadge = document.getElementById('daily-badge');
-            dailyBadge.textContent = `${dailyChangePercent >= 0 ? '+' : ''}${dailyChangePercent.toFixed(2)}% Today`;
-            dailyBadge.className = `trend-tag ${dailyChangePercent >= 0 ? 'trend-up' : 'trend-down'}`;
-
-        } catch (err) {
-            console.error("Market API error: ", err);
+                const dailyBadge = document.getElementById('daily-badge');
+                dailyBadge.textContent = `${dailyChangePercent >= 0 ? '+' : ''}${dailyChangePercent.toFixed(2)}% Today`;
+                dailyBadge.className = `inline-block text-xs font-bold px-2 py-1 rounded ${dailyChangePercent >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}`;
+            } catch (err) { console.error(err); }
         }
-    }
-
-    function resetDashboardUI() {
-        document.getElementById('asset-name').textContent = "No Asset Monitored";
-        document.getElementById('asset-value').textContent = '$0.00';
-        document.getElementById('output-cost').textContent = '$0.00';
-        document.getElementById('output-profit').textContent = '$0.00 (0%)';
-        document.getElementById('daily-badge').className = 'trend-tag trend-neutral';
-        document.getElementById('daily-badge').textContent = '0.00% Today';
-    }
-
-    setInterval(loadInvestmentData, 60000);
-</script>
+        setInterval(loadInvestmentData, 60000);
+    </script>
 </body>
 </html>
