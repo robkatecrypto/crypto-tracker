@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Investment Tracker</title>
+  <title>Daily Crypto Dashboard</title>
 
   <style>
     * {
@@ -19,8 +19,8 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      align-items: flex-start;
+      padding: 30px 20px;
     }
 
     .box {
@@ -29,7 +29,7 @@
       border-radius: 12px;
       padding: 25px;
       width: 100%;
-      max-width: 480px;
+      max-width: 560px;
     }
 
     .header-title {
@@ -75,6 +75,13 @@
       border-color: #10b981;
     }
 
+    .helper-text {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
     .btn-action {
       width: 100%;
       background-color: #10b981;
@@ -99,6 +106,17 @@
       font-size: 15px;
       cursor: pointer;
       margin-top: 10px;
+    }
+
+    .btn-danger {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .flex-row {
@@ -212,6 +230,41 @@
       color: #ffffff;
     }
 
+    .holding-card {
+      background-color: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .holding-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .holding-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .holding-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .holding-value {
+      font-size: 21px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 8px;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -244,7 +297,6 @@
 </head>
 
 <body>
-  <!-- LOGIN SCREEN -->
   <div id="auth-screen" class="box">
     <h2 class="header-title">Crypto Monitor</h2>
     <p class="sub-text">Log in to view your daily crypto dashboard.</p>
@@ -267,7 +319,6 @@
     <p id="auth-message" class="error-text"></p>
   </div>
 
-  <!-- MAIN DASHBOARD SCREEN -->
   <div id="main-screen" class="box hidden">
     <div class="dash-header">
       <div>
@@ -278,86 +329,81 @@
       <button id="btn-logout-main" class="small-button">Sign Out</button>
     </div>
 
-    <div id="empty-state" class="metric-card hidden">
-      <span class="trend-tag trend-neutral">NO ASSET SAVED</span>
-      <div class="metric-value">$0.00</div>
-      <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">
-        Add your first crypto asset to start tracking.
-      </p>
-      <button id="btn-add-first-asset" class="btn-action">Add Asset</button>
-    </div>
-
-    <div id="portfolio-card" class="metric-card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-          <span id="asset-name" class="trend-tag trend-neutral">LOADING</span>
-          <div id="asset-value" class="metric-value">$0.00</div>
-          <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Current Valuation</p>
-        </div>
-
-        <div style="text-align: right;">
-          <div id="daily-badge" class="trend-tag trend-neutral">0.00% Today</div>
-        </div>
-      </div>
+    <div class="metric-card">
+      <span class="trend-tag trend-neutral">COMBINED PORTFOLIO</span>
+      <div id="portfolio-total-value" class="metric-value">$0.00</div>
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Current Combined Valuation</p>
 
       <div class="stat-grid">
         <div class="stat-box">
-          <p class="stat-label">Initial Principal</p>
-          <p id="output-cost" class="stat-value">$0.00</p>
+          <p class="stat-label">Starting Principal</p>
+          <p id="portfolio-total-cost" class="stat-value">$0.00</p>
         </div>
 
         <div class="stat-box">
-          <p class="stat-label">Total Growth ROI</p>
-          <p id="output-profit" class="stat-value">$0.00 (0%)</p>
-        </div>
-
-        <div class="stat-box">
-          <p class="stat-label">Token Volume</p>
-          <p id="output-tokens" class="stat-value">0</p>
-        </div>
-
-        <div class="stat-box">
-          <p class="stat-label">Live Price</p>
-          <p id="output-price" class="stat-value">$0.00</p>
+          <p class="stat-label">Gain / Loss From Start</p>
+          <p id="portfolio-total-profit" class="stat-value">$0.00 (0%)</p>
         </div>
       </div>
 
       <p id="last-updated" class="last-updated">Last updated: --</p>
 
       <button id="btn-refresh" class="btn-action">Refresh Now</button>
-      <button id="btn-edit-asset" class="btn-secondary">Edit Asset</button>
+      <button id="btn-update-holdings" class="btn-secondary">Update Holdings</button>
+    </div>
+
+    <div id="holdings-list"></div>
+
+    <div id="empty-state" class="metric-card hidden">
+      <span class="trend-tag trend-neutral">NO HOLDINGS SAVED</span>
+      <div class="metric-value">$0.00</div>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">
+        Add your first crypto holding to start tracking.
+      </p>
+      <button id="btn-add-first-holding" class="btn-action">Add Holding</button>
     </div>
 
     <p id="main-message" class="error-text"></p>
   </div>
 
-  <!-- EDIT ASSET SCREEN -->
   <div id="edit-screen" class="box hidden">
     <div class="dash-header">
       <div>
-        <h3 style="font-size: 15px; font-weight: bold; color: #10b981;">Edit Asset</h3>
-        <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Saved to your shared dashboard</p>
+        <h3 style="font-size: 15px; font-weight: bold; color: #10b981;">Update Holdings</h3>
+        <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+          Add Kate, Robin, or shared holdings separately
+        </p>
       </div>
 
       <button id="btn-back-main" class="small-button">Back</button>
     </div>
 
     <div class="field-group">
+      <label>Owner Name</label>
+      <input type="text" id="owner-name" placeholder="Kate, Robin, Shared" />
+    </div>
+
+    <div class="field-group">
       <label>Coin Name ID</label>
-      <input type="text" id="inv-coin" placeholder="bitcoin, ethereum, solana" />
+      <input type="text" id="inv-coin" placeholder="bitcoin" />
+      <p class="helper-text">Use CoinGecko IDs like bitcoin, ethereum, or solana.</p>
     </div>
 
     <div class="field-group">
-      <label>Total Token Volume</label>
-      <input type="text" id="inv-amount" placeholder="1.8" />
+      <label>Starting Investment USD</label>
+      <input type="text" id="inv-cost" placeholder="100000" />
+      <p class="helper-text">This becomes the starting value for tracking from today forward.</p>
     </div>
 
     <div class="field-group">
-      <label>Initial Capital Injected (USD)</label>
-      <input type="text" id="inv-cost" placeholder="180000" />
+      <label>Optional Token Amount</label>
+      <input type="text" id="inv-amount" placeholder="Leave blank unless you know it" />
+      <p class="helper-text">
+        If blank, the app estimates tokens using today's live price. If your total is about 1.8 BTC, you may enter Kate/Robin's split manually.
+      </p>
     </div>
 
-    <button id="btn-save-asset" class="btn-action">Save Asset</button>
+    <button id="btn-save-holding" class="btn-action">Add Holding</button>
     <button id="btn-cancel-edit" class="btn-secondary">Cancel</button>
 
     <p id="save-message" class="success-text"></p>
@@ -380,10 +426,8 @@
     const saveMessage = document.getElementById("save-message");
     const mainMessage = document.getElementById("main-message");
 
-    const portfolioCard = document.getElementById("portfolio-card");
+    const holdingsList = document.getElementById("holdings-list");
     const emptyState = document.getElementById("empty-state");
-
-    let currentAsset = null;
 
     function showScreen(screenName) {
       authScreen.classList.add("hidden");
@@ -417,16 +461,39 @@
       });
     }
 
-    function openEditScreen() {
-      showSaveMessage("");
+    function formatNumber(value) {
+      return Number(value).toLocaleString(undefined, {
+        maximumFractionDigits: 8
+      });
+    }
 
-      if (currentAsset) {
-        document.getElementById("inv-coin").value = currentAsset.coin_id || "";
-        document.getElementById("inv-amount").value = currentAsset.amount || "";
-        document.getElementById("inv-cost").value = currentAsset.initial_usd_cost || "";
+    function openUpdateHoldings() {
+      showSaveMessage("");
+      document.getElementById("owner-name").value = "";
+      document.getElementById("inv-coin").value = "bitcoin";
+      document.getElementById("inv-cost").value = "";
+      document.getElementById("inv-amount").value = "";
+      showScreen("edit");
+    }
+
+    async function getCurrentCoinPrice(coinId) {
+      const priceUrl =
+        `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(coinId)}&vs_currencies=usd&include_24hr_change=true`;
+
+      const response = await fetch(priceUrl);
+
+      if (!response.ok) {
+        throw new Error("Could not fetch live price.");
       }
 
-      showScreen("edit");
+      const marketData = await response.json();
+      const coinData = marketData[coinId];
+
+      if (!coinData || !coinData.usd) {
+        throw new Error("Coin not found. Try bitcoin, ethereum, or solana.");
+      }
+
+      return Number(coinData.usd);
     }
 
     supabaseClient.auth.onAuthStateChange((event, session) => {
@@ -487,8 +554,8 @@
       await supabaseClient.auth.signOut();
     });
 
-    document.getElementById("btn-edit-asset").addEventListener("click", openEditScreen);
-    document.getElementById("btn-add-first-asset").addEventListener("click", openEditScreen);
+    document.getElementById("btn-update-holdings").addEventListener("click", openUpdateHoldings);
+    document.getElementById("btn-add-first-holding").addEventListener("click", openUpdateHoldings);
 
     document.getElementById("btn-back-main").addEventListener("click", () => {
       showScreen("main");
@@ -502,41 +569,74 @@
       loadInvestmentData();
     });
 
-    document.getElementById("btn-save-asset").addEventListener("click", async () => {
-      showSaveMessage("");
+    document.getElementById("btn-save-holding").addEventListener("click", async () => {
+      try {
+        showSaveMessage("");
 
-      const coin_id = document.getElementById("inv-coin").value.trim().toLowerCase();
-      const amount = Number(document.getElementById("inv-amount").value);
-      const initial_usd_cost = Number(document.getElementById("inv-cost").value);
+        const owner_name = document.getElementById("owner-name").value.trim();
+        const coin_id = document.getElementById("inv-coin").value.trim().toLowerCase();
+        const initial_usd_cost = Number(document.getElementById("inv-cost").value);
+        const optionalAmountText = document.getElementById("inv-amount").value.trim();
 
-      if (!coin_id || !amount || !initial_usd_cost) {
-        showSaveMessage("Please enter a coin name, token amount, and initial cost.", true);
-        return;
+        if (!owner_name || !coin_id || !initial_usd_cost) {
+          showSaveMessage("Please enter owner, coin, and starting investment amount.", true);
+          return;
+        }
+
+        let amount;
+
+        if (optionalAmountText) {
+          amount = Number(optionalAmountText);
+        } else {
+          const currentPrice = await getCurrentCoinPrice(coin_id);
+          amount = initial_usd_cost / currentPrice;
+        }
+
+        if (!amount || amount <= 0) {
+          showSaveMessage("Token amount could not be calculated.", true);
+          return;
+        }
+
+        const { error } = await supabaseClient
+          .from("user_investments")
+          .insert({
+            profile_id: "shared_dashboard",
+            owner_name,
+            coin_id,
+            amount,
+            initial_usd_cost,
+            updated_at: new Date().toISOString()
+          });
+
+        if (error) {
+          showSaveMessage("Database Error: " + error.message, true);
+        } else {
+          showSaveMessage("Holding added successfully.");
+          await loadInvestmentData();
+          showScreen("main");
+        }
+      } catch (err) {
+        showSaveMessage(err.message, true);
       }
+    });
+
+    async function deleteHolding(id) {
+      const confirmed = confirm("Delete this holding?");
+      if (!confirmed) return;
 
       const { error } = await supabaseClient
         .from("user_investments")
-        .upsert(
-          {
-            profile_id: "shared_dashboard",
-            coin_id: coin_id,
-            amount: amount,
-            initial_usd_cost: initial_usd_cost,
-            updated_at: new Date().toISOString()
-          },
-          {
-            onConflict: "profile_id"
-          }
-        );
+        .delete()
+        .eq("id", id);
 
       if (error) {
-        showSaveMessage("Database Error: " + error.message, true);
+        showMainMessage("Could not delete holding: " + error.message);
       } else {
-        showSaveMessage("Investment saved successfully.");
         await loadInvestmentData();
-        showScreen("main");
       }
-    });
+    }
+
+    window.deleteHolding = deleteHolding;
 
     async function loadInvestmentData() {
       try {
@@ -546,89 +646,139 @@
           .from("user_investments")
           .select("*")
           .eq("profile_id", "shared_dashboard")
-          .maybeSingle();
+          .order("owner_name", { ascending: true });
 
         if (error) {
           console.error("Supabase load error:", error.message);
-          showMainMessage("Could not load saved asset from Supabase.");
+          showMainMessage("Could not load saved holdings from Supabase.");
           return;
         }
 
-        if (!data) {
-          currentAsset = null;
-          portfolioCard.classList.add("hidden");
+        const currentHoldings = data || [];
+
+        if (currentHoldings.length === 0) {
+          holdingsList.innerHTML = "";
           emptyState.classList.remove("hidden");
+          document.getElementById("portfolio-total-value").textContent = "$0.00";
+          document.getElementById("portfolio-total-cost").textContent = "$0.00";
+          document.getElementById("portfolio-total-profit").textContent = "$0.00 (0%)";
+          document.getElementById("last-updated").textContent = "Last updated: --";
           return;
         }
 
-        currentAsset = data;
-
-        portfolioCard.classList.remove("hidden");
         emptyState.classList.add("hidden");
 
+        const uniqueCoinIds = [...new Set(currentHoldings.map(h => h.coin_id))];
+
         const priceUrl =
-          `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(data.coin_id)}&vs_currencies=usd&include_24hr_change=true`;
+          `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(uniqueCoinIds.join(","))}&vs_currencies=usd&include_24hr_change=true`;
 
         const response = await fetch(priceUrl);
 
         if (!response.ok) {
-          throw new Error("Could not fetch crypto price.");
+          throw new Error("Could not fetch crypto prices.");
         }
 
         const marketData = await response.json();
-        const coinData = marketData[data.coin_id];
 
-        if (!coinData) {
-          showMainMessage("Coin not found. Try bitcoin, ethereum, or solana.");
-          return;
-        }
+        let totalValue = 0;
+        let totalCost = 0;
 
-        const currentPrice = Number(coinData.usd) || 0;
-        const dailyChangePercent = Number(coinData.usd_24h_change) || 0;
+        holdingsList.innerHTML = "";
 
-        const liveValue = Number(data.amount) * currentPrice;
-        const profitLoss = liveValue - Number(data.initial_usd_cost);
+        currentHoldings.forEach((holding) => {
+          const coinData = marketData[holding.coin_id];
 
-        const roiPercentage =
-          Number(data.initial_usd_cost) > 0
-            ? (profitLoss / Number(data.initial_usd_cost)) * 100
-            : 0;
+          if (!coinData) {
+            const missingCard = document.createElement("div");
+            missingCard.className = "holding-card";
+            missingCard.innerHTML = `
+              <div class="holding-title">${holding.owner_name} - ${holding.coin_id.toUpperCase()}</div>
+              <div class="holding-sub">Coin not found. Check the Coin Name ID.</div>
+              <button class="btn-danger" style="margin-top: 12px;" onclick="deleteHolding('${holding.id}')">
+                Delete Holding
+              </button>
+            `;
+            holdingsList.appendChild(missingCard);
+            return;
+          }
 
-        document.getElementById("asset-name").textContent = data.coin_id.toUpperCase();
-        document.getElementById("asset-name").className = "trend-tag trend-neutral";
+          const currentPrice = Number(coinData.usd) || 0;
+          const dailyChangePercent = Number(coinData.usd_24h_change) || 0;
 
-        document.getElementById("asset-value").textContent = formatMoney(liveValue);
-        document.getElementById("output-cost").textContent = formatMoney(data.initial_usd_cost);
-        document.getElementById("output-tokens").textContent = Number(data.amount).toLocaleString();
-        document.getElementById("output-price").textContent = formatMoney(currentPrice);
+          const liveValue = Number(holding.amount) * currentPrice;
+          const profitLoss = liveValue - Number(holding.initial_usd_cost);
 
-        const profitEl = document.getElementById("output-profit");
+          const roiPercentage =
+            Number(holding.initial_usd_cost) > 0
+              ? (profitLoss / Number(holding.initial_usd_cost)) * 100
+              : 0;
 
-        profitEl.textContent =
-          (profitLoss >= 0 ? "+" : "") +
-          formatMoney(profitLoss) +
+          totalValue += liveValue;
+          totalCost += Number(holding.initial_usd_cost);
+
+          const card = document.createElement("div");
+          card.className = "holding-card";
+
+          card.innerHTML = `
+            <div class="holding-top">
+              <div>
+                <div class="holding-title">${holding.owner_name} - ${holding.coin_id.toUpperCase()}</div>
+                <div class="holding-sub">${formatNumber(holding.amount)} tokens at ${formatMoney(currentPrice)} live price</div>
+              </div>
+
+              <div class="trend-tag ${dailyChangePercent >= 0 ? "trend-up" : "trend-down"}">
+                ${dailyChangePercent >= 0 ? "+" : ""}${dailyChangePercent.toFixed(2)}% Today
+              </div>
+            </div>
+
+            <div class="holding-value">${formatMoney(liveValue)}</div>
+
+            <div class="stat-grid">
+              <div class="stat-box">
+                <p class="stat-label">Starting Value</p>
+                <p class="stat-value">${formatMoney(holding.initial_usd_cost)}</p>
+              </div>
+
+              <div class="stat-box">
+                <p class="stat-label">Gain / Loss</p>
+                <p class="stat-value" style="color: ${profitLoss >= 0 ? "#10b981" : "#ef4444"};">
+                  ${profitLoss >= 0 ? "+" : ""}${formatMoney(profitLoss)} (${roiPercentage.toFixed(2)}%)
+                </p>
+              </div>
+            </div>
+
+            <button class="btn-danger" style="margin-top: 12px;" onclick="deleteHolding('${holding.id}')">
+              Delete Holding
+            </button>
+          `;
+
+          holdingsList.appendChild(card);
+        });
+
+        const totalProfit = totalValue - totalCost;
+        const totalRoi = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+
+        document.getElementById("portfolio-total-value").textContent = formatMoney(totalValue);
+        document.getElementById("portfolio-total-cost").textContent = formatMoney(totalCost);
+
+        const totalProfitEl = document.getElementById("portfolio-total-profit");
+
+        totalProfitEl.textContent =
+          (totalProfit >= 0 ? "+" : "") +
+          formatMoney(totalProfit) +
           " (" +
-          roiPercentage.toFixed(2) +
+          totalRoi.toFixed(2) +
           "%)";
 
-        profitEl.style.color = profitLoss >= 0 ? "#10b981" : "#ef4444";
-
-        const dailyBadge = document.getElementById("daily-badge");
-
-        dailyBadge.textContent =
-          (dailyChangePercent >= 0 ? "+" : "") +
-          dailyChangePercent.toFixed(2) +
-          "% Today";
-
-        dailyBadge.className =
-          "trend-tag " + (dailyChangePercent >= 0 ? "trend-up" : "trend-down");
+        totalProfitEl.style.color = totalProfit >= 0 ? "#10b981" : "#ef4444";
 
         document.getElementById("last-updated").textContent =
           "Last updated: " + new Date().toLocaleString();
 
       } catch (err) {
         console.error("Load investment error:", err);
-        showMainMessage("Could not load live crypto price right now.");
+        showMainMessage("Could not load live crypto prices right now.");
       }
     }
 
