@@ -42,23 +42,23 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="md:col-span-1 bg-gray-900 border border-gray-800 p-5 rounded-xl h-fit">
                 <h3 class="text-sm font-bold text-gray-300 uppercase mb-4 tracking-wider">Set Your Investment</h3>
-                <form id="investment-form" class="space-y-4">
+               <div class="space-y-4">
                     <div>
                         <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin)</label>
-                        <input type="text" id="inv-coin" required placeholder="bitcoin" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
+                        <input type="text" id="inv-coin" placeholder="bitcoin" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-400 mb-1">Total Amount Owned</label>
-                        <input type="text" id="inv-amount" required placeholder="1.8" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
+                        <input type="text" id="inv-amount" placeholder="1.8" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-400 mb-1">Initial USD Cost</label>
-                        <input type="text" id="inv-cost" required placeholder="180000" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
+                        <input type="text" id="inv-cost" placeholder="180000" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
-                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-2 rounded text-sm cursor-pointer transition shadow-md">
+                    <button type="button" id="btn-save-asset" class="w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold py-2 rounded text-sm cursor-pointer transition shadow-md">
                         Save / Overwrite Asset
                     </button>
-                </form>
+                </div>
             </div>
             <div class="md:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col justify-between">
                 <div class="flex justify-between items-start">
@@ -119,11 +119,15 @@
 
         document.getElementById('btn-logout').addEventListener('click', () => supabase.auth.signOut());
 
-        document.getElementById('investment-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Direct click tracker that completely blocks the question mark refresh behavior
+        document.getElementById('btn-save-asset').addEventListener('click', async () => {
             const coin_id = document.getElementById('inv-coin').value.trim().toLowerCase();
             const amount = parseFloat(document.getElementById('inv-amount').value);
             const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
+
+            if (!coin_id || isNaN(amount) || isNaN(initial_usd_cost)) {
+                return alert("Please enter valid parameters.");
+            }
 
             const { error } = await supabase.from('user_investments').upsert({
                 profile_id: "shared_dashboard", coin_id, amount, initial_usd_cost, updated_at: new Date()
