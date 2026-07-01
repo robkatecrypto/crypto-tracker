@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Investment Tracker</title>
-    <!-- Cloud Framework Core Connectors (Fully Fixed and Repaired Paths) -->
     <script src="https://jsdelivr.net"></script>
-<script src="https://jsdelivr.net"></script>
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body class="bg-gray-950 text-slate-100 min-h-screen">
 
@@ -48,7 +47,7 @@
                 <h3 class="text-sm font-bold text-gray-300 uppercase mb-4 tracking-wider">Set Your Investment</h3>
                 <form id="investment-form" class="space-y-4">
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin, ethereum, solana)</label>
+                        <label class="block text-xs text-gray-400 mb-1">Coin API ID (e.g., bitcoin, solana)</label>
                         <input type="text" id="inv-coin" required placeholder="bitcoin" class="w-full bg-gray-800 border border-gray-700 rounded p-2 text-sm text-white outline-none focus:border-emerald-500">
                     </div>
                     <div>
@@ -102,7 +101,7 @@
     </div>
 
     <script>
-        const SUPABASE_URL = "https://zpdmornrnntxjfgzoxel.supabase.co";
+        const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_Uyjnl4PT9p0ZVXH8A-ymPA_COswR2yI";
         
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -147,7 +146,7 @@
             const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
 
             if (isNaN(amount) || isNaN(initial_usd_cost)) {
-                return alert("Please enter a valid number for amount and cost.");
+                return alert("Please enter valid numeric values.");
             }
 
             const { error } = await supabase.from('user_investments').upsert({
@@ -177,3 +176,5 @@
                 let tickerSymbol = "BTCUSDT";
                 if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
                 if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
+
+                const res = await fetch(`https://binance.com{tickerSymbol}`);
