@@ -158,10 +158,9 @@
                 if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
                 if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
 
-                const res = await fetch("https://binance.com" + tickerSymbol);
-                const marketData = await res.json();
-                const currentPrice = parseFloat(marketData.lastPrice);
-                const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
+                const marketData = await fetch("https://binance.com" + tickerSymbol).then(r => r.json());
+        const currentPrice = parseFloat(marketData.lastPrice) || 0;
+        const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
 
                 const liveValue = activeAsset.amount * currentPrice;
                 const profitLoss = liveValue - activeAsset.initial_usd_cost;
