@@ -177,15 +177,13 @@
             try {
                 const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
                 if (error || !invs || invs.length === 0) return;
-
-                const activeAsset = invs[0];
+const activeAsset = invs[0];
                 let tickerSymbol = "BTCUSDT";
                 if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
                 if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
 
-                const res = await fetch(`https://binance.com{tickerSymbol}`);
-                const marketData = await res.json();
-
+            const res = await fetch("https://binance.com" + tickerSymbol);
+        const marketData = await res.json();
                 const currentPrice = parseFloat(marketData.lastPrice);
                 const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
 
