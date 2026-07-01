@@ -1,185 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Investment Tracker</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #0b0f19; color: #f1f5f9; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .box { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; width: 100%; max-width: 450px; }
-        .header-title { font-size: 22px; font-weight: bold; color: #10b981; text-align: center; margin-bottom: 5px; }
-        .sub-text { font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 20px; }
-        .field-group { margin-bottom: 15px; }
-        .field-group label { display: block; font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .field-group input { width: 100%; background-color: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 6px; color: #ffffff; font-size: 15px; outline: none; }
-        .field-group input:focus { border-color: #10b981; }
-        .btn-action { width: 100%; background-color: #10b981; color: #030712; font-weight: bold; padding: 12px; border-radius: 6px; border: none; font-size: 15px; cursor: pointer; margin-top: 5px; }
-        .flex-row { display: flex; gap: 10px; margin-top: 10px; }
-        .flex-row button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; }
-        .btn-go { background-color: #10b981; color: #030712; }
-        .btn-create { background-color: #1f2937; color: #f8fafc; border: 1px solid #374151; }
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #374151; }
-        .metric-card { background-color: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .metric-title { font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase; }
-        .metric-value { font-size: 26px; font-weight: 800; color: #ffffff; margin-top: 3px; }
-        .trend-tag { display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 5px; }
-        .trend-up { background-color: rgba(16,185,129,0.15); color: #10b981; }
-        .trend-down { background-color: rgba(239,68,68,0.15); color: #ef4444; }
-        .trend-neutral { background-color: #374151; color: #94a3b8; }
-        .hidden { display: none !important; }
-        .foot { text-align: center; margin-top: 20px; font-size: 12px; color: #64748b; padding-top: 15px; border-top: 1px solid #1f2937; }
-        .foot a { color: #10b981; text-decoration: underline; }
-    </style>
-    <script src="https://jsdelivr.net"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Investment Tracker</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background-color: #0b0f19; color: #f1f5f9; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .box { background-color: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; width: 100%; max-width: 450px; }
+    .header-title { font-size: 22px; font-weight: bold; color: #10b981; text-align: center; margin-bottom: 5px; }
+    .sub-text { font-size: 13px; color: #94a3b8; text-align: center; margin-bottom: 20px; }
+    .field-group { margin-bottom: 15px; }
+    .field-group label { display: block; font-size: 11px; color: #94a3b8; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+    .field-group input { width: 100%; background-color: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 6px; color: #ffffff; font-size: 15px; outline: none; }
+    .field-group input:focus { border-color: #10b981; }
+    .btn-action { width: 100%; background-color: #10b981; color: #030712; font-weight: bold; padding: 12px; border-radius: 6px; border: none; font-size: 15px; cursor: pointer; margin-top: 5px; }
+    .flex-row { display: flex; gap: 10px; margin-top: 10px; }
+    .flex-row button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; }
+    .btn-go { background-color: #10b981; color: #030712; }
+    .btn-create { background-color: #1f2937; color: #f8fafc; border: 1px solid #374151; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #374151; }
+    .metric-card { background-color: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    .metric-value { font-size: 26px; font-weight: 800; color: #ffffff; margin-top: 3px; }
+    .trend-tag { display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 5px; }
+    .trend-up { background-color: rgba(16,185,129,0.15); color: #10b981; }
+    .trend-down { background-color: rgba(239,68,68,0.15); color: #ef4444; }
+    .trend-neutral { background-color: #374151; color: #94a3b8; }
+    .hidden { display: none !important; }
+  </style>
+
+  <!-- Correct Supabase browser library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
-    <div id="auth-screen" class="box">
-        <h2 class="header-title">Crypto Monitor</h2>
-        <p class="sub-text">Create up to 2 unique logins. Accounts share the same data view.</p>
-        <div class="field-group">
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="name@example.com">
-        </div>
-        <div class="field-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••">
-        </div>
-        <div class="flex-row">
-            <button id="btn-login" class="btn-go">Log In</button>
-            <button id="btn-signup" class="btn-create">Sign Up</button>
-        </div>
+  <div id="auth-screen" class="box">
+    <h2 class="header-title">Crypto Monitor</h2>
+    <p class="sub-text">Create up to 2 unique logins. Accounts share the same data view.</p>
+
+    <div class="field-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="name@example.com" />
     </div>
-     <!-- SHARED WORKSPACE MONITORING PANEL -->
-    <div id="dashboard-screen" class="box hidden">
-        <div class="dash-header">
-            <div>
-                <h3 style="font-size: 15px; font-weight: bold; color: #10b981;">Asset Workspace</h3>
-                <p id="user-display" style="font-size: 11px; color: #94a3b8; margin-top: 2px;"></p>
-            </div>
-            <button id="btn-logout" style="background-color: #1f2937; color: #f8fafc; border: 1px solid #374151; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;">Sign Out</button>
-        </div>
 
-        <div class="metric-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
-                    <span id="asset-name" class="trend-tag trend-neutral">NO ASSET MONITORING</span>
-                    <div id="asset-value" class="metric-value">$0.00</div>
-                    <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Current Valuation</p>
-                </div>
-                <div style="text-align: right;">
-                    <div id="daily-badge" class="trend-tag trend-neutral">0.00% Today</div>
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 12px; border-top: 1px solid #1f2937;">
-                <div>
-                    <p style="font-size: 11px; color: #94a3b8;">Initial Principal</p>
-                    <p id="output-cost" style="font-size: 15px; font-weight: bold; color: #ffffff;">$0.00</p>
-                </div>
-                <div style="text-align: right;">
-                    <p style="font-size: 11px; color: #94a3b8;">Total Growth ROI</p>
-                    <p id="output-profit" style="font-size: 15px; font-weight: bold; color: #ffffff;">$0.00 (0%)</p>
-                </div>
-            </div>
-        </div>
+    <div class="field-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" />
+    </div>
 
+    <div class="flex-row">
+      <button id="btn-login" class="btn-go">Log In</button>
+      <button id="btn-signup" class="btn-create">Sign Up</button>
+    </div>
+  </div>
+
+  <div id="dashboard-screen" class="box hidden">
+    <div class="dash-header">
+      <div>
+        <h3 style="font-size: 15px; font-weight: bold; color: #10b981;">Asset Workspace</h3>
+        <p id="user-display" style="font-size: 11px; color: #94a3b8; margin-top: 2px;"></p>
+      </div>
+
+      <button id="btn-logout" style="background-color: #1f2937; color: #f8fafc; border: 1px solid #374151; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;">
+        Sign Out
+      </button>
+    </div>
+
+    <div class="metric-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
-            <div class="field-group">
-                <label>Coin Name ID (bitcoin, ethereum, solana)</label>
-                <input type="text" id="inv-coin" placeholder="bitcoin">
-            </div>
-            <div class="field-group">
-                <label>Total Token Volume</label>
-                <input type="text" id="inv-amount" placeholder="1.8">
-            </div>
-            <div class="field-group">
-                <label>Initial Capital Injected (USD)</label>
-                <input type="text" id="inv-cost" placeholder="180000">
-            </div>
-            <button id="btn-save-asset" class="btn-action">Save / Overwrite Asset</button>
+          <span id="asset-name" class="trend-tag trend-neutral">NO ASSET MONITORING</span>
+          <div id="asset-value" class="metric-value">$0.00</div>
+          <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Current Valuation</p>
         </div>
+
+        <div style="text-align: right;">
+          <div id="daily-badge" class="trend-tag trend-neutral">0.00% Today</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 12px; border-top: 1px solid #1f2937;">
+        <div>
+          <p style="font-size: 11px; color: #94a3b8;">Initial Principal</p>
+          <p id="output-cost" style="font-size: 15px; font-weight: bold; color: #ffffff;">$0.00</p>
+        </div>
+
+        <div style="text-align: right;">
+          <p style="font-size: 11px; color: #94a3b8;">Total Growth ROI</p>
+          <p id="output-profit" style="font-size: 15px; font-weight: bold; color: #ffffff;">$0.00 (0%)</p>
+        </div>
+      </div>
     </div>
 
-    <script>
-        const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_Uyjnl4PT9p0ZVXH8A-ymPA_COswR2yI";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <div>
+      <div class="field-group">
+        <label>Coin Name ID</label>
+        <input type="text" id="inv-coin" placeholder="bitcoin, ethereum, solana" />
+      </div>
 
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('dashboard-screen').classList.remove('hidden');
-                document.getElementById('user-display').textContent = `User: ${session.user.email}`;
-                loadInvestmentData();
-            } else {
-                document.getElementById('auth-screen').classList.remove('hidden');
-                document.getElementById('dashboard-screen').classList.add('hidden');
-            }
+      <div class="field-group">
+        <label>Total Token Volume</label>
+        <input type="text" id="inv-amount" placeholder="1.8" />
+      </div>
+
+      <div class="field-group">
+        <label>Initial Capital Injected (USD)</label>
+        <input type="text" id="inv-cost" placeholder="180000" />
+      </div>
+
+      <button id="btn-save-asset" class="btn-action">Save / Overwrite Asset</button>
+    </div>
+  </div>
+
+  <script>
+    /*
+      IMPORTANT:
+      Replace these with the values from your Supabase project:
+      Project Settings > Data API > Project URL
+      Project Settings > API Keys > publishable/anon key
+    */
+    const SUPABASE_URL = "https://YOUR-PROJECT-ID.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR-SUPABASE-PUBLISHABLE-OR-ANON-KEY";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    const authScreen = document.getElementById("auth-screen");
+    const dashboardScreen = document.getElementById("dashboard-screen");
+    const userDisplay = document.getElementById("user-display");
+
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        authScreen.classList.add("hidden");
+        dashboardScreen.classList.remove("hidden");
+        userDisplay.textContent = `User: ${session.user.email}`;
+        loadInvestmentData();
+      } else {
+        authScreen.classList.remove("hidden");
+        dashboardScreen.classList.add("hidden");
+      }
+    });
+
+    document.getElementById("btn-signup").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("Please enter an email and password.");
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.signUp({ email, password });
+
+      if (error) {
+        alert(error.message);
+      } else {
+        alert("Account created. Check your email if confirmation is enabled in Supabase.");
+      }
+    });
+
+    document.getElementById("btn-login").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("Please enter an email and password.");
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) alert(error.message);
+    });
+
+    document.getElementById("btn-logout").addEventListener("click", async () => {
+      await supabaseClient.auth.signOut();
+    });
+
+    document.getElementById("btn-save-asset").addEventListener("click", async () => {
+      const coin_id = document.getElementById("inv-coin").value.trim().toLowerCase();
+      const amount = Number(document.getElementById("inv-amount").value);
+      const initial_usd_cost = Number(document.getElementById("inv-cost").value);
+
+      if (!coin_id || !amount || !initial_usd_cost) {
+        alert("Please enter a coin name, token amount, and initial cost.");
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("user_investments")
+        .upsert({
+          profile_id: "shared_dashboard",
+          coin_id,
+          amount,
+          initial_usd_cost,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: "profile_id"
         });
 
-        document.getElementById('btn-signup').addEventListener('click', async () => {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const { error } = await supabase.auth.signUp({ email, password });
-            if (error) alert(error.message);
-            else alert("Account created successfully!");
-        });
+      if (error) {
+        alert("Database Error: " + error.message);
+      } else {
+        alert("Investment saved successfully.");
+        loadInvestmentData();
+      }
+    });
 
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message);
-        });
+    async function loadInvestmentData() {
+      try {
+        const { data, error } = await supabaseClient
+          .from("user_investments")
+          .select("*")
+          .eq("profile_id", "shared_dashboard")
+          .maybeSingle();
 
-        document.getElementById('btn-logout').addEventListener('click', () => supabase.auth.signOut());
-
-        document.getElementById('btn-save-asset').addEventListener('click', async () => {
-            const coin_id = document.getElementById('inv-coin').value.trim().toLowerCase();
-            const amount = parseFloat(document.getElementById('inv-amount').value);
-            const initial_usd_cost = parseFloat(document.getElementById('inv-cost').value);
-
-            const { error } = await supabase.from('user_investments').upsert({
-                profile_id: "shared_dashboard", coin_id, amount, initial_usd_cost, updated_at: new Date()
-            });
-
-            if (error) alert("Database Error: " + error.message);
-            else { alert("Investment Saved Successfully!"); loadInvestmentData(); }
-        });
-
-        async function loadInvestmentData() {
-            try {
-                const { data: invs, error } = await supabase.from('user_investments').select('*').eq('profile_id', 'shared_dashboard');
-                if (error || !invs || invs.length === 0) return;
-                const activeAsset = invs[0];
-
-                let tickerSymbol = "BTCUSDT";
-                if (activeAsset.coin_id === "ethereum") tickerSymbol = "ETHUSDT";
-                if (activeAsset.coin_id === "solana") tickerSymbol = "SOLUSDT";
-
-                const marketData = await fetch("https://binance.com" + tickerSymbol).then(r => r.json());
-        const currentPrice = parseFloat(marketData.lastPrice) || 0;
-        const dailyChangePercent = parseFloat(marketData.priceChangePercent) || 0;
-
-                const liveValue = activeAsset.amount * currentPrice;
-                const profitLoss = liveValue - activeAsset.initial_usd_cost;
-                const roiPercentage = activeAsset.initial_usd_cost > 0 ? (profitLoss / activeAsset.initial_usd_cost) * 100 : 0;
-
-                document.getElementById('asset-name').textContent = activeAsset.coin_id;
-                document.getElementById('asset-value').textContent = "$" + liveValue.toLocaleString(undefined, {minimumFractionDigits: 2});
-                document.getElementById('output-cost').textContent = "$" + parseFloat(activeAsset.initial_usd_cost).toLocaleString(undefined, {minimumFractionDigits: 2});
-                
-                const profitEl = document.getElementById('output-profit');
-                profitEl.textContent = (profitLoss >= 0 ? '+' : '') + "$" + profitLoss.toLocaleString(undefined, {minimumFractionDigits: 2}) + " (" + roiPercentage.toFixed(2) + "%)";
-                profitEl.style.color = profitLoss >= 0 ? '#10b981' : '#ef4444';
-
-                const dailyBadge = document.getElementById('daily-badge');
-                dailyBadge.textContent = (dailyChangePercent >= 0 ? '+' : '') + dailyChangePercent.toFixed(2) + "% Today";
-                dailyBadge.className = "trend-tag " + (dailyChangePercent >= 0 ? "trend-up" : "trend-down");
-            } catch (err) { console.error(err); }
+        if (error) {
+          console.error("Supabase load error:", error.message);
+          return;
         }
-        setInterval(loadInvestmentData, 60000);
-    </script>
+
+        if (!data) return;
+
+        const activeAsset = data;
+
+        const priceUrl =
+          `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(activeAsset.coin_id)}&vs_currencies=usd&include_24hr_change=true`;
+
+        const response = await fetch(priceUrl);
+
+        if (!response.ok) {
+          throw new Error("Could not fetch crypto price.");
+        }
+
+        const marketData = await response.json();
+        const coinData = marketData[activeAsset.coin_id];
+
+        if (!coinData) {
+          alert("Coin not found. Try bitcoin, ethereum, or solana.");
+          return;
+        }
+
+        const currentPrice = Number(coinData.usd) || 0;
+        const dailyChangePercent = Number(coinData.usd_24h_change) || 0;
+
+        const liveValue = Number(activeAsset.amount) * currentPrice;
+        const profitLoss = liveValue - Number(activeAsset.initial_usd_cost);
+        const roiPercentage =
+          Number(activeAsset.initial_usd_cost) > 0
+            ? (profitLoss / Number(activeAsset.initial_usd_cost)) * 100
+            : 0;
+
+        document.getElementById("asset-name").textContent =
+          activeAsset.coin_id.toUpperCase();
+
+        document.getElementById("asset-value").textContent =
+          "$" + liveValue.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+        document.getElementById("output-cost").textContent =
+          "$" + Number(activeAsset.initial_usd_cost).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+        const profitEl = document.getElementById("output-profit");
+
+        profitEl.textContent =
+          (profitLoss >= 0 ? "+" : "") +
+          "$" +
+          profitLoss.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }) +
+          " (" +
+          roiPercentage.toFixed(2) +
+          "%)";
+
+        profitEl.style.color = profitLoss >= 0 ? "#10b981" : "#ef4444";
+
+        const dailyBadge = document.getElementById("daily-badge");
+
+        dailyBadge.textContent =
+          (dailyChangePercent >= 0 ? "+" : "") +
+          dailyChangePercent.toFixed(2) +
+          "% Today";
+
+        dailyBadge.className =
+          "trend-tag " + (dailyChangePercent >= 0 ? "trend-up" : "trend-down");
+
+      } catch (err) {
+        console.error("Load investment error:", err);
+      }
+    }
+
+    setInterval(loadInvestmentData, 60000);
+  </script>
 </body>
 </html>
